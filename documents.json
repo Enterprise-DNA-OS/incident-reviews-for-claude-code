@@ -1,11 +1,42 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "review-pack",
+    "title": "Incident review record",
+    "for_each": "select id,reference from incidents order by reference",
+    "file": "reference",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Incident record",
+        "sql": "select reference,name,state,severity,owner,summary,started_at,resolved_at,review_due from incidents where id=$1"
+      },
+      {
+        "title": "Chronology",
+        "sql": "select happened_at,note,evidence,actor from timeline where incident_id=$1 order by happened_at"
+      },
+      {
+        "title": "Review findings",
+        "sql": "select reviewer,reviewed_at,cause,lessons,evidence from reviews where incident_id=$1"
+      },
+      {
+        "title": "Corrective actions",
+        "sql": "select name,owner,due_on,state,completed_at,evidence from actions where incident_id=$1 order by due_on"
+      }
+    ]
+  },
+  {
+    "name": "action-brief",
+    "title": "Corrective action brief",
+    "for_each": "select id,reference from incidents where exists(select 1 from actions where incident_id=incidents.id) order by reference",
+    "file": "reference",
+    "sections": [
+      {
+        "title": "Incident record",
+        "sql": "select reference,name,state,severity,owner,summary,started_at,resolved_at,review_due from incidents where id=$1"
+      },
+      {
+        "title": "Corrective actions",
+        "sql": "select name,owner,due_on,state,completed_at,evidence from actions where incident_id=$1 order by due_on"
+      }
     ]
   }
 ]

@@ -1,13 +1,35 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Incident Reviews for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Incident review week",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Reviews to finish",
+        "sql": "select reference,name,service,owner,state,review_due,open_actions from v_review_queue order by review_due nulls first,reference"
+      }
+    ]
+  },
+  {
+    "name": "follow-ups",
+    "title": "Corrective actions",
+    "sections": [
+      {
+        "title": "Open actions",
+        "sql": "select reference,service,action,owner,due_on,days_overdue from v_action_queue order by due_on,reference"
+      }
+    ]
+  },
+  {
+    "name": "service-health",
+    "title": "Service review health",
+    "sections": [
+      {
+        "title": "Recurrence and unfinished work",
+        "sql": "select service,owner,criticality,incidents,unfinished,last_30_days,avg_minutes_to_resolution,overdue_actions from v_service_health order by service"
+      },
+      {
+        "title": "Record checks",
+        "sql": "select * from v_compliance order by reference,rule"
       }
     ]
   }

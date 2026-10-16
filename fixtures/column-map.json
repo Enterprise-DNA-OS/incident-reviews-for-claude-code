@@ -1,0 +1,8 @@
+{
+  "key": "ID",
+  "reference": "Reference",
+  "name": "Name",
+  "summary": "Summary",
+  "started": "Created at",
+  "visibility": "Visibility"
+}

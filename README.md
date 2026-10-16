@@ -1,115 +1,79 @@
-<h1 align="center">Incident Reviews for Claude Code</h1>
+# Incident Reviews for Claude Code
 
-<p align="center">
-  <strong>The open-source incident review desk that is just a database and Claude Code.</strong>
-</p>
+Finish the incident review. Name the owner, record the evidence and close the follow-ups.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+## Three ways to own it
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your incident.io data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=incident-io">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/incident-io?utm_source=github&utm_medium=readme&utm_campaign=incident-io">How it works</a></td>
-  </tr>
-</table>
+- **Do it yourself:** free MIT code for Claude Code, Codex, OpenCode or Cursor. Agent subscriptions, hosting and your time remain your costs.
+- **We customise it:** Enterprise DNA maps your incident.io records, changes your fields and review rules, and builds agreed screens and connections. A different stack is an option.
+- **We run it for you:** Omni by Enterprise DNA installs and operates your version. One setup fee, then a monthly retainer.
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-incident-io">Instead of incident.io</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+[Book 30 minutes with Sam](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=incident-io).
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
+## Try the fictional service desk
 
----
-
-## What is this
-
-Incident Reviews for Claude Code does the job you pay incident.io for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the incident.io dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays incident.io per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=incident-io).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
-
-## Quick start
-
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or newer. No database account required.
 
 ```bash
-git clone https://github.com/Enterprise-DNA-OS/incident-reviews-for-claude-code.git
-cd incident-reviews-for-claude-code
 npm install
 npm run demo
+npm run incidents -- review-queue
+npm run incidents -- follow-ups
+npm run incidents -- repeat-failures
+npm run incidents -- weekly-review --json
+npm run view
+npm run docs
+npm test
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+PGlite stores demo records in .data/db. DATA_DIR chooses another local database. DATABASE_URL chooses PostgreSQL 15 or newer. Use an empty database and npm run migrate for real records; never seed a business database. The schema uses the same SQL on both engines.
 
-### Use it with your own Postgres or Supabase
+## The working week
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+Start with `/attention`, assign the review work with `/review-queue`, check `/follow-ups`, inspect `/repeat-failures` and write `/weekly-review`. `/compliance` flags record gaps against documented controls and team deadlines. It does not certify compliance or decide whether an incident is legally reportable.
 
-## The commands
+Record incidents and dated events, resolve impact with evidence, record cause and lessons, then complete corrective actions. Closure requires a written review and no open actions. Every mutation requires an actor and accepts a dry run that rolls back records and audit events. Every command accepts --json. Names match case-insensitively, references match exactly, and ID prefixes work. Ambiguity prints candidates and exits 1.
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+This is the review and evidence workflow. It does not deliver urgent alerts, run on-call schedules, record calls, host status pages or capture chat. Keep your paging service. The free version remains useful offline for reviews, follow-ups and internal reports. [The screen boundary](docs/why-no-front-end.md) explains the deployment work.
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+## Ten questions answered from your records
 
-## Instead of incident-io
+These join your records across incidents, services and follow-ups. They are not a claim that incident.io cannot be configured to answer the same questions.
 
-<!-- TODO(author): how to bring data across from incident.io; link docs/replace-incident-io.md -->
+1. Which resolved incidents missed their review date? (`attention`)
+2. Which corrective actions are overdue, and who owns them? (`follow-ups`)
+3. Which service has multiple incidents in the last 30 days and overdue actions? (`repeat-failures`)
+4. Which imported incidents still need a local owner and classification? (`attention`)
+5. Which review cycles are unfinished even after a written review? (`review-queue`)
+6. Which services have the longest recorded average resolution time? (`service-health`)
+7. Which records lack any local timeline evidence? (`compliance`)
+8. Which incident records have passed their retention review date? (`compliance`)
+9. Who recorded a resolution, review or action completion? (`history`)
+10. What did the old system say before local verification? (`imported-records`)
 
-## Architecture
+## Your first hour: ten things to ask for
 
-```
-incident-reviews-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
+1. Put our name, logo and colours in brand.json.
+2. Show the late review in the fictional demo.
+3. Find the overdue action on the repeat-failure service.
+4. Explain the difference between resolved and closed.
+5. Map the actual headings in our incident.io export.
+6. Preview the import and reconcile its counts.
+7. Classify an imported record without treating its old status as proof.
+8. Produce an internal review pack.
+9. Add our review category through /customise.
+10. Add an owner-specific read-only report through /new-view.
 
-## Built for coding agents
+## Bringing your history
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+[The replacement guide](docs/replace-incident-io.md) covers the CSV export and one-command import. Original rows are retained. Identical reimports are skipped; changed rows and reference collisions stop the entire import. The fixture is synthetic, so map your actual column names first. Imported incidents stay unverified until reviewed locally. Timeline, attachments, follow-ups and post-mortem contents need separate mapping.
 
-## Contributing
+Export creates a complete JSON archive and refuses to overwrite an existing file. Restoration is a reviewed migration. Rendered HTML, exports and drafts contain incident records; protect them like the database. The two document types are an incident review pack and a corrective action brief. Three read-only dashboards show the week, follow-ups and service history. Draft commands never send.
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+## Verification and deployment
 
-## Want it installed and run for you?
+npm test uses a temporary database, migrates and seeds twice, exercises every CLI command, and checks chronology, state gates, dry-run rollback, ambiguous names, import atomicity, duplicate imports, audit protection, exports and HTML escaping. CI covers Ubuntu, Windows and PostgreSQL; a platform is only verified when its job passes. TEST_DATABASE_URL must be an empty disposable database.
 
-Enterprise DNA installs Incident Reviews for Claude Code for your business, migrates your incident.io data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+One business, trusted operators. No per-person access control. Row security denies public access; the CLI uses an owner connection. Do not expose it to a browser. Actor names are not authentication, and database owners can change audit triggers. See [record checks and source rules](docs/compliance.md).
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=incident-io)
-- Read more: [enterprisedna.co/omni/instead-of/incident-io](https://enterprisedna.co/omni/instead-of/incident-io?utm_source=github&utm_medium=readme&utm_campaign=incident-io)
-
-## License
-
-MIT. Copyright (c) 2026 Enterprise DNA.
+MIT. Copyright 2026 Enterprise DNA. Independent of incident.io and Anthropic.
